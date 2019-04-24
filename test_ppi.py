@@ -57,7 +57,7 @@ print(labels.shape)
 # print(labels)
 # print(graph[0])
 print(adj.shape)
-print(type(features))
+print(type(adj))
 
 idx_test = test_idx_range.tolist()
 idx_train = range(len(y))
@@ -208,4 +208,5 @@ except:
 adj = nx.adjacency_matrix(nx.from_dict_of_lists(graph_dict))
 
 print(adj.shape)
+print(type(adj))
 
