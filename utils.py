@@ -193,7 +193,8 @@ def preprocess_features(features, sparse=True):
     
     if sparse:
         return sparse_to_tuple(features)
-    return features.todense()
+    # return features.todense()
+    return features
 
 
 def normalize_adj(adj):

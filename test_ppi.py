@@ -57,7 +57,7 @@ print(labels.shape)
 # print(labels)
 # print(graph[0])
 print(adj.shape)
-print(type(adj))
+print(type(features))
 
 idx_test = test_idx_range.tolist()
 idx_train = range(len(y))
@@ -122,6 +122,7 @@ import json
 with open("ppi/ppi-feats.npy", 'rb') as fin:
     features = np.load(fin)
     print(features.shape)
+    print(type(features))
 
 n_node = features.shape[0]  # 56944
 n_feature = features.shape[1]  # 50
