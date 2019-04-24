@@ -153,6 +153,7 @@ def load_ppi_data():
 
 
 def load_small_data(dataset_str):
+    dataset_str = "ppi"
     if dataset_str == "cora":
         return load_cora_data(dataset_str)
     else:
