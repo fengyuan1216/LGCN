@@ -168,17 +168,34 @@ y_test[test_mask, :] = labels[test_mask, :]
 
 #------------------------------------------
 
-graph_dict = {}
-with open("ppi/ppi-walks.txt", 'r') as fin:
-    for oneline in fin.readlines():
-        one_list = oneline.rstrip('\n').split('\t')
-        left = int(one_list[0])
-        right = int(one_list[1])
+try:
+    fin = open("ppi/ppi-walks.pkl", 'rb')
+    graph_dict = pkl.load(fin)
+    print("load from pkl file")
+except:
+    graph_dict = {}
+    with open("ppi/ppi-walks.txt", 'r') as fin:
+        for oneline in fin.readlines():
+            one_list = oneline.rstrip('\n').split('\t')
+            left = int(one_list[0])
+            right = int(one_list[1])
 
-        if left not in graph_dict:
-            graph_dict[left] = [right]
-        else:
-            graph_dict[left].append(right)
+            if left not in graph_dict:
+                graph_dict[left] = [right]
+            else:
+                graph_dict[left].append(right)
+            
+            left = int(one_list[1])
+            right = int(one_list[0])
+
+            if left not in graph_dict:
+                graph_dict[left] = [right]
+            else:
+                graph_dict[left].append(right)
+
+    fout = open("ppi/ppi-walks.pkl", 'wb')
+    pkl.dump(graph_dict, fout)
+    fout.close()
 
 adj = nx.adjacency_matrix(nx.from_dict_of_lists(graph_dict))
 

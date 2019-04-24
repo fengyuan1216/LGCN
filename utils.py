@@ -28,8 +28,8 @@ def load_data(dataset_str):
     return load_small_data(dataset_str)
 
 
-def load_small_data(dataset_str):
-    """Load data."""
+def load_cora_data(dataset_str):
+    """Load cora data."""
     names = ['x', 'y', 'tx', 'ty', 'allx', 'ally', 'graph']
     objects = []
     for i in range(len(names)):
@@ -66,6 +66,97 @@ def load_small_data(dataset_str):
     y_test[test_mask, :] = labels[test_mask, :]
 
     return adj, features, y_train, y_val, y_test, train_mask, val_mask, test_mask
+
+
+def load_ppi_data():
+    with open("ppi/ppi-feats.npy", 'rb') as fin:
+        features = np.load(fin)
+        print(features.shape)
+
+    n_node = features.shape[0]  # 56944
+    n_feature = features.shape[1]  # 50
+    n_class = 121  # 121
+
+    idx_test = []
+    idx_train = []
+    idx_val = []
+
+    infile = open("ppi/ppi-G.json")
+
+    for index, one in enumerate(json.load(infile)['nodes']):
+        if one['test'] == True:
+            idx_test.append(one['id'])
+        if one['val'] == True:
+            idx_val.append(one['id'])
+        if one['test'] == False and one['val'] == False:
+            idx_train.append(one['id'])
+
+    print(len(idx_test))
+    print(len(idx_val))
+    print(len(idx_train))
+
+    train_mask = sample_mask(idx_train, n_node)
+    val_mask = sample_mask(idx_val, n_node)
+    test_mask = sample_mask(idx_test, n_node)
+
+    #------------------------------------------
+
+    labels = np.zeros((n_node, n_class))
+
+    with open("ppi/ppi-class_map.json", 'r') as fin:
+        label_json = json.load(fin)
+        for idx in range(n_node):
+            labels[idx] = label_json[str(idx)]
+
+    y_train = np.zeros(labels.shape)
+    y_val = np.zeros(labels.shape)
+    y_test = np.zeros(labels.shape)
+
+    y_train[train_mask, :] = labels[train_mask, :]
+    y_val[val_mask, :] = labels[val_mask, :]
+    y_test[test_mask, :] = labels[test_mask, :]
+
+    #------------------------------------------
+
+    try:
+        fin = open("ppi/ppi-walks.pkl", 'rb')
+        graph_dict = pkl.load(fin)
+        print("load from pkl file")
+    except:
+        graph_dict = {}
+        with open("ppi/ppi-walks.txt", 'r') as fin:
+            for oneline in fin.readlines():
+                one_list = oneline.rstrip('\n').split('\t')
+                left = int(one_list[0])
+                right = int(one_list[1])
+
+                if left not in graph_dict:
+                    graph_dict[left] = [right]
+                else:
+                    graph_dict[left].append(right)
+                
+                left = int(one_list[1])
+                right = int(one_list[0])
+
+                if left not in graph_dict:
+                    graph_dict[left] = [right]
+                else:
+                    graph_dict[left].append(right)
+
+        fout = open("ppi/ppi-walks.pkl", 'wb')
+        pkl.dump(graph_dict, fout)
+        fout.close()
+
+    adj = nx.adjacency_matrix(nx.from_dict_of_lists(graph_dict))
+    print(adj.shape)
+    return adj, features, y_train, y_val, y_test, train_mask, val_mask, test_mask
+
+
+def load_small_data(dataset_str):
+    if dataset_str == "cora":
+        return load_cora_data(dataset_str)
+    else:
+        return load_ppi_data()
 
 
 def sparse_to_tuple(sparse_mx):
