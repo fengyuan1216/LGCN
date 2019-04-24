@@ -11,7 +11,7 @@ def configure():
     flags.DEFINE_integer('summary_interval', 10, '# of step to save summary')
     flags.DEFINE_float('learning_rate', 0.1, 'learning rate')
     flags.DEFINE_boolean('is_train', True, 'is train')
-    flags.DEFINE_integer('class_num', 7, 'output class number')
+    flags.DEFINE_integer('class_num', 121, 'output class number')
     # Debug
     flags.DEFINE_string('logdir', './logdir', 'Log dir')
     flags.DEFINE_string('modeldir', './modeldir', 'Model dir')
@@ -27,7 +27,7 @@ def configure():
     flags.DEFINE_integer('k', 8, 'top k')
     flags.DEFINE_string('first_conv', 'simple_conv', 'simple_conv, chan_conv')
     flags.DEFINE_string('second_conv', 'graph_conv', 'graph_conv, simple_conv')
-    flags.DEFINE_boolean('use_batch', True, 'use batch training')
+    flags.DEFINE_boolean('use_batch', False, 'use batch training')
     flags.DEFINE_integer('batch_size', 2500, 'batch size number')
     flags.DEFINE_integer('center_num', 1500, 'start center number')
     # fix bug of flags

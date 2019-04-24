@@ -173,7 +173,6 @@ def sparse_to_tuple(sparse_mx):
 
 
 def preprocess_features(features, sparse=True):
-    sparse = True
     """Row-normalize feature matrix and convert to tuple representation"""
     rowsum = np.array(features.sum(1))
     #import ipdb; ipdb.set_trace()
@@ -187,8 +186,8 @@ def preprocess_features(features, sparse=True):
     
     if sparse:
         return sparse_to_tuple(features)
-    return features.todense()
-    # return features
+    # return features.todense()
+    return features
 
 
 def normalize_adj(adj):
