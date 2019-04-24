@@ -124,24 +124,17 @@ def load_ppi_data():
         print("load from pkl file")
     except:
         graph_dict = {}
+        for idx in range(len(idx_train)):
+            graph_dict[idx] = []
+
         with open("ppi/ppi-walks.txt", 'r') as fin:
             for oneline in fin.readlines():
                 one_list = oneline.rstrip('\n').split('\t')
                 left = int(one_list[0])
                 right = int(one_list[1])
 
-                if left not in graph_dict:
-                    graph_dict[left] = [right]
-                else:
-                    graph_dict[left].append(right)
-                
-                left = int(one_list[1])
-                right = int(one_list[0])
-
-                if left not in graph_dict:
-                    graph_dict[left] = [right]
-                else:
-                    graph_dict[left].append(right)
+                graph_dict[left].append(right)
+                graph_dict[right].append(left)
 
         fout = open("ppi/ppi-walks.pkl", 'wb')
         pkl.dump(graph_dict, fout)
