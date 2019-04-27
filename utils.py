@@ -68,6 +68,78 @@ def load_cora_data(dataset_str):
     return adj, features, y_train, y_val, y_test, train_mask, val_mask, test_mask
 
 
+def load_ppi_sub_data():
+    infile = open("new_ppi/feature_sub.pkl", 'rb')
+    features = pickle.load(infile)
+    infile.close()
+
+    print(features.shape)
+
+    n_node = features.shape[0]  # 5186
+    n_feature = features.shape[1]  # 50
+    n_class = 121  # 121
+
+    #------------------------------------------
+    idx_test = []
+    idx_train = []
+    idx_val = []
+
+    with open("new_ppi/train_ids.txt", 'r') as infile:
+        for oneline in infile.readlines():
+            idx = int(oneline.rstrip('\n'))
+            idx_train.append(idx)
+
+    with open("new_ppi/valid_ids.txt", 'r') as infile:
+        for oneline in infile.readlines():
+            idx = int(oneline.rstrip('\n'))
+            idx_val.append(idx)
+
+    with open("new_ppi/test_ids.txt", 'r') as infile:
+        for oneline in infile.readlines():
+            idx = int(oneline.rstrip('\n'))
+            idx_test.append(idx)
+
+    print(len(idx_train))
+    print(len(idx_val))
+    print(len(idx_test))
+
+    train_mask = sample_mask(idx_train, n_node)
+    val_mask = sample_mask(idx_val, n_node)
+    test_mask = sample_mask(idx_test, n_node)
+
+    #------------------------------------------
+    infile = open("new_ppi/label_sub.pkl", 'rb')
+    labels = pickle.load(infile)
+    infile.close()
+
+    y_train = np.zeros(labels.shape)
+    y_val = np.zeros(labels.shape)
+    y_test = np.zeros(labels.shape)
+
+    y_train[train_mask, :] = labels[train_mask, :]
+    y_val[val_mask, :] = labels[val_mask, :]
+    y_test[test_mask, :] = labels[test_mask, :]
+
+    #------------------------------------------
+    graph_dict = {}
+    for idx in range(len(idx_train) + len(idx_val) + len(idx_test)):
+        graph_dict[idx] = []
+
+    with open("new_ppi/adj_sub.txt", 'r') as fin:
+        for oneline in fin.readlines():
+            one_list = oneline.rstrip('\n').split('\t')
+            left = int(one_list[0])
+            right = int(one_list[1])
+
+            graph_dict[left].append(right)
+            graph_dict[right].append(left)
+
+    adj = nx.adjacency_matrix(nx.from_dict_of_lists(graph_dict))
+    print(adj.shape)
+    print(type(adj))
+    return adj, features, y_train, y_val, y_test, train_mask, val_mask, test_mask
+
+
 def load_ppi_data():
     with open("ppi/ppi-feats.npy", 'rb') as fin:
         features = np.load(fin)
@@ -146,11 +218,13 @@ def load_ppi_data():
 
 
 def load_small_data(dataset_str):
-    dataset_str = "ppi"
+    dataset_str = "ppi_sub"
     if dataset_str == "cora":
         return load_cora_data(dataset_str)
-    else:
+    elif dataset_str == "ppi":
         return load_ppi_data()
+    else:
+        return load_ppi_sub_data()
 
 
 def sparse_to_tuple(sparse_mx):

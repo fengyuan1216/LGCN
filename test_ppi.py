@@ -124,6 +124,8 @@ with open("ppi/ppi-feats.npy", 'rb') as fin:
     print(features.shape)
     print(type(features))
 
+print(features[0])
+# exit(0)
 n_node = features.shape[0]  # 56944
 n_feature = features.shape[1]  # 50
 n_class = 121  # 121
@@ -167,8 +169,10 @@ y_train[train_mask, :] = labels[train_mask, :]
 y_val[val_mask, :] = labels[val_mask, :]
 y_test[test_mask, :] = labels[test_mask, :]
 
-#------------------------------------------
 
+
+#------------------------------------------
+exit(0)
 # max_id = -1
 
 # with open("ppi/ppi-walks.txt", 'r') as fin:
@@ -209,4 +213,5 @@ adj = nx.adjacency_matrix(nx.from_dict_of_lists(graph_dict))
 
 print(adj.shape)
 print(type(adj))
+print(adj[0])
 
