@@ -124,7 +124,7 @@ def load_ppi_sub_data():
 
     #------------------------------------------
     graph_dict = {}
-    for idx in range(len(idx_train) + len(idx_val) + len(idx_test)):
+    for idx in range(n_node):
         graph_dict[idx] = []
 
     with open("new_ppi/adj_sub.txt", 'r') as fin:
