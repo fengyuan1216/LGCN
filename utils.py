@@ -79,9 +79,9 @@ def load_ppi_sub_data():
     n_class = 121  # 121
 
     #------------------------------------------
-    idx_test = []
     idx_train = []
     idx_val = []
+    idx_test = []
 
     with open("new_ppi/train_ids.txt", 'r') as infile:
         for oneline in infile.readlines():
@@ -97,6 +97,10 @@ def load_ppi_sub_data():
         for oneline in infile.readlines():
             idx = int(oneline.rstrip('\n'))
             idx_test.append(idx)
+
+    idx_train = [i for i in range(0, 1000, 1)]
+    idx_val = [i for i in range(1000, 1300, 1)]
+    idx_test = [i for i in range(1300, 1500, 1)]
 
     print(len(idx_train))
     print(len(idx_val))
