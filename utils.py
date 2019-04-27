@@ -69,9 +69,8 @@ def load_cora_data(dataset_str):
 
 
 def load_ppi_sub_data():
-    infile = open("new_ppi/feature_sub.pkl", 'rb')
-    features = pkl.load(infile)
-    infile.close()
+    with open("new_ppi/feature_sub.npy", 'rb') as fin:
+        features = np.load(fin)
 
     print(features.shape)
 
@@ -108,9 +107,8 @@ def load_ppi_sub_data():
     test_mask = sample_mask(idx_test, n_node)
 
     #------------------------------------------
-    infile = open("new_ppi/label_sub.pkl", 'rb')
-    labels = pkl.load(infile)
-    infile.close()
+    with open("new_ppi/label_sub.npy", 'rb') as fin:
+        labels = np.load(fin)
 
     y_train = np.zeros(labels.shape)
     y_val = np.zeros(labels.shape)
