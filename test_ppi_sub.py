@@ -21,9 +21,11 @@ def sample_mask(idx, l):
     return np.array(mask, dtype=np.bool)
 
 #------------------------------------------
-infile = open("new_ppi/feature_sub.pkl", 'rb')
-features = pickle.load(infile)
-infile.close()
+with open("new_ppi/feature_sub.npy", 'rb') as fin:
+    features = np.load(fin)
+# infile = open("new_ppi/feature_sub.pkl", 'rb')
+# features = pickle.load(infile)
+# infile.close()
 
 print(features.shape)
 
@@ -60,9 +62,12 @@ val_mask = sample_mask(idx_val, n_node)
 test_mask = sample_mask(idx_test, n_node)
 
 #------------------------------------------
-infile = open("new_ppi/label_sub.pkl", 'rb')
-labels = pickle.load(infile)
-infile.close()
+# infile = open("new_ppi/label_sub.pkl", 'rb')
+# labels = pickle.load(infile)
+# infile.close()
+
+with open("new_ppi/label_sub.npy", 'rb') as fin:
+    labels = np.load(fin)
 
 y_train = np.zeros(labels.shape)
 y_val = np.zeros(labels.shape)
