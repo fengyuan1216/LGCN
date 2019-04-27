@@ -70,7 +70,7 @@ def load_cora_data(dataset_str):
 
 def load_ppi_sub_data():
     infile = open("new_ppi/feature_sub.pkl", 'rb')
-    features = pickle.load(infile)
+    features = pkl.load(infile)
     infile.close()
 
     print(features.shape)
@@ -109,7 +109,7 @@ def load_ppi_sub_data():
 
     #------------------------------------------
     infile = open("new_ppi/label_sub.pkl", 'rb')
-    labels = pickle.load(infile)
+    labels = pkl.load(infile)
     infile.close()
 
     y_train = np.zeros(labels.shape)
